@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalyan Mandal | Artist Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;500;900&display=swap');
+        
+        body { margin: 0; background-color: #000; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        
+        /* Glass UI */
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); 
+        }
+
+        /* Top Nav Subscribe Button */
+        .nav-glass {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sub-button {
+            background: #ff0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+        .sub-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.7);
+        }
+        
+        /* Mobile Scroll */
+        .video-wrapper {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 1.5rem;
+            padding: 40px 20px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .video-wrapper::-webkit-scrollbar { display: none; }
+
+        .video-container {
+            flex: 0 0 85%;
+            scroll-snap-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .video-container { flex: 0 0 calc(33.333% - 1.4rem); }
+        }
+
+        /* 3D Floating Images */
+        .floating-img {
+            transition: transform 0.2s ease-out;
+            filter: drop-shadow(0 20px 40px rgba(139, 92, 246, 0.4));
+        }
+
+        .hero-title { font-family: 'Syncopate', sans-serif; font-size: clamp(3rem, 10vw, 8rem); line-height: 0.9; }
+        .cursor-glow { position: fixed; width: 400px; height: 400px; background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: transform 0.1s ease-out; }
+
+        /* Secret Admin Trigger Style */
+        #secret-admin-trigger {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 20px;
+            height: 20px;
+            z-index: 9999;
+            cursor: crosshair;
+            background: transparent;
+        }
+        #secret-admin-trigger:hover {
+            background: rgba(139, 92, 246, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-glow" id="cursor"></div>
+    <div id="canvas-container"></div>
+
+    <nav class="fixed top-0 w-full z-50 nav-glass">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="font-black tracking-tighter text-xl">KALYAN <span class="text-purple-500">MANDAL</span></div>
+            <a href="https://youtube.com/@thesoulofkalyan?si=cmRELIY_2C4rCmNl" target="_blank" class="sub-button px-6 py-2 rounded-full text-xs font-bold tracking-widest uppercase flex items-center gap-2">
+                <svg width="16" height="16" fill="white" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                Subscribe
+            </a>
+        </div>
+    </nav>
+
+    <section class="h-screen flex flex-col items-center justify-center text-center px-4 relative">
+        <h1 class="hero-title mb-6 animate-pulse uppercase">Kalyan<br><span class="text-transparent" style="-webkit-text-stroke: 1px #fff;">Mandal</span></h1>
+        <p class="text-xs md:text-lg tracking-[0.8em] text-gray-400 font-light ml-[0.8em]">SONIC ARCHITECT</p>
+    </section>
+
+    <section class="py-24 px-6 max-w-7xl mx-auto overflow-hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="glass-card p-10 rounded-[3rem] relative z-10">
+                <h2 class="text-4xl font-black italic mb-6 text-purple-500 uppercase tracking-tighter">Know Kalyan</h2>
+                <div class="space-y-4 text-gray-300 leading-relaxed text-sm md:text-base">
+                    <p>Welcome to my world. I am a <strong class="text-white">Music Maker</strong> from the heart of Assam. My journey is all about creating sounds that touch the soul.</p>
+                    <p>I don't just sing—I <strong class="text-white">write my own songs</strong> and design the music from scratch. For me, every beat is a piece of a story.</p>
+                    <p>I love working with my friends! We often <strong class="text-white">collaborate</strong> to create unique music videos that bring our visions to life. From studio sessions to outdoor shoots, we aim for excellence.</p>
+                </div>
+            </div>
+
+            <div class="relative h-[400px] md:h-[500px] flex items-center justify-center" id="photo-area">
+                <img src="1.png" class="floating-img absolute w-48 h-64 object-cover rounded-2xl z-30 border-2 border-purple-500/30" data-speed="2.5" style="top: 10%;">
+                <img src="2.png" class="floating-img absolute w-40 h-56 object-cover rounded-2xl z-20 opacity-70" data-speed="-1.5" style="right: 10%; top: 5%;">
+                <img src="3.png" class="floating-img absolute w-44 h-60 object-cover rounded-2xl z-10 opacity-50" data-speed="1.2" style="left: 5%; bottom: 10%;">
+                <img src="4.png" class="floating-img absolute w-36 h-48 object-cover rounded-2xl z-0 opacity-30" data-speed="-2" style="right: 5%; bottom: 5%;">
+                <img src="5.png" class="floating-img absolute w-40 h-56 object-cover rounded-2xl z-20 opacity-60" data-speed="3" style="top: 40%;">
+                <img src="6.png" class="floating-img absolute w-44 h-60 object-cover rounded-2xl z-10 opacity-40" data-speed="-1.8" style="left: 15%; top: 15%;">
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 max-w-[100rem] mx-auto overflow-hidden">
+        <div class="px-8 mb-4">
+            <h2 class="text-4xl font-black italic tracking-tighter">VIDEOS</h2>
+            <p class="text-[10px] tracking-widest text-purple-400 uppercase">Swipe or scroll to explore</p>
+        </div>
+        
+        <div id="video-grid" class="video-wrapper"></div>
+
+        <div class="mt-20 mx-6 p-1 relative overflow-hidden rounded-[3rem] bg-gradient-to-r from-purple-600 to-pink-600">
+            <div class="bg-black p-10 rounded-[2.9rem] flex flex-col items-center text-center">
+                <h3 class="text-2xl font-bold mb-6">Listen on Spotify</h3>
+                <a href="https://open.spotify.com" target="_blank" class="px-8 py-4 bg-white text-black font-black rounded-full hover:scale-105 transition-all text-sm">
+                    OPEN PLAYER
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6">
+        <div class="max-w-4xl mx-auto glass-card p-10 rounded-[3rem]">
+            <h2 class="text-4xl font-black mb-8 italic uppercase tracking-tighter">Send Signal</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <input type="text" id="contact_name" placeholder="Name" class="bg-transparent border-b border-gray-800 p-3 outline-none focus:border-purple-500 transition" required>
+                <input type="email" id="contact_email" placeholder="Email" class="bg-transparent border-b border-gray-800 p-3 outline-none focus:border-purple-500 transition" required>
+                <input type="tel" id="contact_phone" placeholder="Phone" class="bg-transparent border-b border-gray-800 p-3 outline-none focus:border-purple-500 transition" required>
+                <select id="contact_purpose" class="bg-transparent border-b border-gray-800 p-3 outline-none focus:border-purple-500 transition cursor-pointer text-gray-400">
+                    <option value="Live Performance" class="bg-black">Live Performance</option>
+                    <option value="Collaboration" class="bg-black">Collaboration</option>
+                </select>
+                <textarea id="contact_message" placeholder="Message" rows="3" class="md:col-span-2 bg-transparent border-b border-gray-800 p-3 outline-none focus:border-purple-500 transition"></textarea>
+                <button onclick="sendWhatsApp()" class="md:col-span-2 mt-4 py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black rounded-2xl uppercase tracking-widest text-sm hover:scale-[1.02] transition-transform">
+                    Connect via WhatsApp
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 text-center text-gray-600 text-[10px] tracking-[0.5em]">
+        © 2026 KALYAN MANDAL
+    </footer>
+
+    <div id="secret-admin-trigger" onclick="window.location.href='owner-panel.html'"></div>
+
+    <script>
+        // 1. VIDEOS INJECTION
+        const videoIds = ['dEsqOB2ert8', '0_Fyjr2mftI', 'f98mIq6QenY', 'Q15ngrCT5xc', 'cuI4-ucZ3b8', 'AfjpzrGI7F8', 'uOCmaTDEUNI'];
+        const grid = document.getElementById('video-grid');
+        videoIds.forEach(id => {
+            grid.innerHTML += `
+                <div class="video-container">
+                    <div class="glass-card rounded-[2rem] overflow-hidden group">
+                        <div class="relative h-56 overflow-hidden">
+                            <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg" class="w-full h-full object-cover">
+                            <a href="https://youtube.com/watch?v=${id}" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition">
+                                <div class="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center font-bold">▶</div>
+                            </a>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-[9px] tracking-widest font-black text-purple-500 uppercase">Original Track</p>
+                            <h4 class="text-lg font-bold italic uppercase">Kalyan Mandal</h4>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        // 2. MOUSE CURSOR GLOW
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // 3. 3D PHOTO PARALLAX LOGIC
+        document.addEventListener('mousemove', (e) => {
+            const imgs = document.querySelectorAll('.floating-img');
+            const x = (window.innerWidth - e.pageX * 2) / 100;
+            const y = (window.innerHeight - e.pageY * 2) / 100;
+
+            imgs.forEach(img => {
+                const speed = img.getAttribute('data-speed');
+                img.style.transform = `translateX(${x * speed}px) translateY(${y * speed}px)`;
+            });
+        });
+
+        // 4. BACKGROUND 3D ANIMATION (THREE.JS)
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        const ringGroup = new THREE.Group();
+        for(let i=0; i<3; i++) {
+            const geometry = new THREE.TorusGeometry(10 + (i*2), 0.03, 16, 100);
+            const material = new THREE.MeshBasicMaterial({ color: 0x8b5cf6, transparent: true, opacity: 0.15 });
+            const ring = new THREE.Mesh(geometry, material);
+            ring.rotation.x = Math.random() * Math.PI;
+            ring.rotation.y = Math.random() * Math.PI;
+            ringGroup.add(ring);
+        }
+        scene.add(ringGroup);
+        camera.position.z = 25;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ringGroup.children.forEach((ring, i) => {
+                ring.rotation.x += 0.002 * (i + 1);
+                ring.rotation.y += 0.002 * (i + 1);
+            });
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // 5. WHATSAPP REDIRECT FUNCTION
+        function sendWhatsApp() {
+            const name = document.getElementById('contact_name').value;
+            const email = document.getElementById('contact_email').value;
+            const phone = document.getElementById('contact_phone').value;
+            const purpose = document.getElementById('contact_purpose').value;
+            const message = document.getElementById('contact_message').value;
+
+            if(!name || !phone) {
+                alert("Please fill in your Name and Phone Number.");
+                return;
+            }
+
+            const waNumber = "919957137707"; // Your phone number with country code
+            const finalMessage = `*CONTACT INQUIRY - KALYAN MANDAL*%0A%0A` +
+                                `*Name:* ${name}%0A` +
+                                `*Email:* ${email}%0A` +
+                                `*Phone:* ${phone}%0A` +
+                                `*Purpose:* ${purpose}%0A` +
+                                `*Message:* ${message}`;
+
+            window.open(`https://wa.me/${waNumber}?text=${finalMessage}`, '_blank');
+        }
+    </script>
+</body>
+</html>
