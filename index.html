@@ -269,7 +269,41 @@
 
             window.open(`https://wa.me/${waNumber}?text=${finalMessage}`, '_blank');
         }
-    </script>
+    </script> <script>// 3. 3D AUTOMATIC SCRIBBLE SCRAMBLE ANIMATION
+        const imgs = document.querySelectorAll('.floating-img');
+        
+        // Initialize random starting positions and phases for each image
+        const imgStates = Array.from(imgs).map(() => ({
+            phaseX: Math.random() * Math.PI * 2,
+            phaseY: Math.random() * Math.PI * 2,
+            speed: 0.02 + Math.random() * 0.03 // Variation in movement speed
+        }));
+
+        function animateScramble() {
+            imgs.forEach((img, i) => {
+                const state = imgStates[i];
+                const intensity = parseFloat(img.getAttribute('data-speed')) * 20;
+
+                // Update phases
+                state.phaseX += state.speed;
+                state.phaseY += state.speed * 0.8;
+
+                // Calculate "Scramble" position using Sine/Cosine for smooth looping
+                const x = Math.sin(state.phaseX) * intensity;
+                const y = Math.cos(state.phaseY) * intensity;
+                const rotate = Math.sin(state.phaseX * 0.5) * 5; // Slight organic rotation
+
+                img.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${rotate}deg)`;
+            });
+            requestAnimationFrame(animateScramble);
+        }
+
+        // Start the automatic animation
+        animateScramble();
+
+        // (Keep the rest of your scripts below)
+        // 4. BACKGROUND 3D ANIMATION (THREE.JS)...</script>
 </body>
 
 </html>
+
